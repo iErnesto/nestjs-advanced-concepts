@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { EntityExistsPipe } from 'src/common/pipes/entity-exists/entity-exists.pipe';
+import { Coffee } from './entities/coffee.entity';
 
 @Controller('coffees')
 export class CoffeesController {
@@ -23,7 +33,10 @@ export class CoffeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
+  update(
+    @Param('id', EntityExistsPipe(Coffee)) id: string,
+    @Body() updateCoffeeDto: UpdateCoffeeDto,
+  ) {
     return this.coffeesService.update(+id, updateCoffeeDto);
   }
 
